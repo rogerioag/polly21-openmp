@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Gera LLVM IR (.ll) e objeto (.o) de cada kernel de uma árvore de fontes PolyBench,
-# rotulando a saída com o nome da variante. Depois, rode o ompscan.py em results/ir.
+# rotulando a saída com o nome da variante. Depois, rode o ompscan.py em results/estrutura/ir.
 #
 # Uso: ./emit_ir.sh <variante> <dir_fontes> <dir_utilities> [flags extras...]
 #
@@ -18,7 +18,7 @@
 set -euo pipefail
 
 VAR=${1:?variante}; SRC=${2:?dir de fontes}; UTIL=${3:?dir utilities}; shift 3
-OUT=${OUT:-$PWD/results}
+OUT=${OUT:-$PWD/results/estrutura}
 CC=${CC:-clang}
 DATASET=${DATASET:-LARGE_DATASET}
 mkdir -p "$OUT/ir" "$OUT/obj" "$OUT/log"

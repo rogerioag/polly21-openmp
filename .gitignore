@@ -1,8 +1,13 @@
-# saídas geradas
-results/
+# Cada execução fica em results/<data-hora>[-TAG]/.
+# Vão para o git: manifest.txt, times.csv, omp-structure.csv, remarks/, sizes/.
+# Ficam fora (grandes, regeneráveis): executáveis, IR e assembly — guarde-os
+# como anexo de release (ver README, "Guardar os artefatos").
+results/*/bin/
+results/*/ir/
+results/*/asm/
+results/latest
 results-*/
-*.ll
 *.o
-*.csv
-*.json
 __pycache__/
+results/estrutura/obj/
+results/estrutura/ir/
