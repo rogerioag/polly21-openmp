@@ -25,8 +25,11 @@ A comparação é feita de duas formas:
 
 ```bash
 docker build -t polly21 .
-docker run --rm -it -v ~/PolyBench-C-4.2.1:/work/pb -v $PWD:/work/proj polly21
+docker run --rm -it -v ~/PolyBenchC-4.2.1:/work/pb -v $PWD:/work/proj -w /work/proj polly21
 ```
+
+No container, os scripts ficam em `/work/proj` (a pasta do projeto no host). O
+`-w /work/proj` já abre o shell ali, e os resultados ficam gravados no host.
 
 O build do LLVM é demorado. Rode-o dentro do `tmux` ou do `screen` no servidor.
 
@@ -42,8 +45,8 @@ O build do LLVM é demorado. Rode-o dentro do `tmux` ou do `screen` no servidor.
 ```bash
 FLAGS_POLLY="-mllvm -polly -mllvm -polly-parallel -mllvm -polly-omp-backend=LLVM -mllvm -polly-scheduling=static"
 
-./emit_ir.sh polly-omp ~/PolyBench-C-4.2.1     ~/PolyBench-C-4.2.1/utilities $FLAGS_POLLY
-./emit_ir.sh dawncc    ~/dawncc-out            ~/PolyBench-C-4.2.1/utilities -fopenmp
+./emit_ir.sh polly-omp ~/PolyBenchC-4.2.1     ~/PolyBenchC-4.2.1/utilities $FLAGS_POLLY
+./emit_ir.sh dawncc    ~/dawncc-out            ~/PolyBenchC-4.2.1/utilities -fopenmp
 ./emit_ir.sh acc-omp   ~/PolyBench-ACC/OpenMP  ~/PolyBench-ACC/common        -fopenmp
 
 ./ompscan.py --quiet --compare --csv results/omp.csv results/ir/*.ll   # IR (preferido)

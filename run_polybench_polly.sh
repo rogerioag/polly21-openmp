@@ -5,7 +5,7 @@
 #   polly-omp : -O3 + Polly + paralelização automática com OpenMP (libomp)
 #
 # Uso: ./run_polybench_polly.sh <dir_polybench> [DATASET] [THREADS] [REPS]
-#   ex.: ./run_polybench_polly.sh ~/PolyBench-C-4.2.1 LARGE_DATASET 16 5
+#   ex.: ./run_polybench_polly.sh ~/PolyBenchC-4.2.1 LARGE_DATASET 16 5
 set -euo pipefail
 
 PB=${1:?informe o diretório do PolyBench/C}
@@ -30,7 +30,9 @@ declare -A FLAGS=(
   [polly-omp]="$POLLY_OMP"
 )
 
-mapfile -t KERNELS < <(find "$PB" -name '*.c' ! -path '*/utilities/*' | sort)
+# só <kernel>/<kernel>.c — ignora arquivos auxiliares como medley/nussinov/Nussinov.orig.c
+mapfile -t KERNELS < <(find "$PB" -name '*.c' ! -path '*/utilities/*' | sort |
+                       while read -r f; do [ "$(basename "$f" .c)" = "$(basename "$(dirname "$f")")" ] && echo "$f"; done)
 
 for src in "${KERNELS[@]}"; do
   k=$(basename "$src" .c)

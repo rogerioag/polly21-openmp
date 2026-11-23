@@ -6,12 +6,12 @@
 #
 # Exemplos:
 #   # Polly paralelizando o PolyBench/C original (ou a versão linearizada)
-#   ./emit_ir.sh polly-omp ~/PolyBench-C-4.2.1 ~/PolyBench-C-4.2.1/utilities \
+#   ./emit_ir.sh polly-omp ~/PolyBenchC-4.2.1 ~/PolyBenchC-4.2.1/utilities \
 #       -mllvm -polly -mllvm -polly-parallel -mllvm -polly-omp-backend=LLVM \
 #       -mllvm -polly-scheduling=static
 #
 #   # Saída anotada do DawnCC, compilada com o clang 21 para CPU
-#   ./emit_ir.sh dawncc ~/dawncc-out ~/PolyBench-C-4.2.1/utilities -fopenmp
+#   ./emit_ir.sh dawncc ~/dawncc-out ~/PolyBenchC-4.2.1/utilities -fopenmp
 #
 #   # PolyBench-ACC, versão OpenMP
 #   ./emit_ir.sh acc-omp ~/PolyBench-ACC/OpenMP ~/PolyBench-ACC/common -fopenmp
@@ -30,6 +30,8 @@ find "$SRC" -name '*.c' ! -name 'polybench.c' ! -path '*/utilities/*' ! -path '*
 while read -r src; do
   k=$(basename "$src" .c)
   d=$(dirname "$src")
+  # só <kernel>/<kernel>.c — ignora auxiliares como Nussinov.orig.c
+  [ "$k" = "$(basename "$d")" ] || continue
   log="$OUT/log/$k.$VAR.txt"
   if $CC $BASE "$@" -I"$d" -S -emit-llvm "$src" -o "$OUT/ir/$k.$VAR.ll" -Rpass-analysis=polly 2> "$log" &&
      $CC $BASE "$@" -I"$d" -c "$src" -o "$OUT/obj/$k.$VAR.o" 2>> "$log"; then
